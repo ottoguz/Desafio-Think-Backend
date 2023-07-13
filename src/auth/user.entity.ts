@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { AccountTypeEnum } from "./account-type.enum";
 
 @Entity()
 export class User {
