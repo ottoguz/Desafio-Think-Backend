@@ -2,7 +2,7 @@
 import { DataSource, Repository } from 'typeorm';
 import { User } from './user.entity';
 import { AuthCredentialsDto } from './auth-credentials.dto';
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
 
 @Injectable()
 export class UsersRepository extends Repository<User> {
@@ -18,6 +18,15 @@ export class UsersRepository extends Repository<User> {
       password,
       accountType,
     });
-    await this.save(user);
+
+    try {
+      await this.save(user);    
+    } catch (error){
+        if (error.code === '23505') {
+            throw new ConflictException('Email already existis!')
+        } else {
+            throw new InternalServerErrorException();
+        }
+    }
   }
 }
