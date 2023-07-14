@@ -1,10 +1,15 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UsersRepository } from './users.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './jwt-payload.interface';
+import { User } from './user.entity';
 
 @Injectable()
 export class AuthService {
@@ -36,5 +41,14 @@ export class AuthService {
     } else {
       throw new UnauthorizedException('Please check your login credentials');
     }
+  }
+
+  async getUserById(id: string): Promise<User> {
+    const foundUser = await this.usersRepository.findOneBy({ id });
+
+    if (!foundUser) {
+      throw new NotFoundException();
+    }
+    return foundUser;
   }
 }
