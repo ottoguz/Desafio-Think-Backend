@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { DataSource, Repository } from 'typeorm';
 import { User } from './user.entity';
-import { AuthCredentialsDto } from './auth-credentials.dto';
+import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import { ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 

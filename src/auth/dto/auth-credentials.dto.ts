@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { IsEmail, IsString, Matches, MaxLength, MinLength } from 'class-validator';
-import { AccountTypeEnum } from './account-type.enum';
+import { AccountTypeEnum } from '../account-type.enum';
 
 export class AuthCredentialsDto {
   @IsString()
