@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { IsEmail, IsString, Matches, MaxLength, MinLength } from 'class-validator';
+import { IsEmail, IsEnum, IsString, Matches, MaxLength, MinLength } from 'class-validator';
 import { AccountTypeEnum } from '../account-type.enum';
 
 // Classe de transferência de dados de autenticação de usuários
@@ -30,5 +30,6 @@ export class AuthCredentialsDto {
   password: string;
 
   // Enum contendo os possiveis tipos de conta (OWNER, EDITOR, VIEWER)
+  @IsEnum(AccountTypeEnum)
   accountType: AccountTypeEnum;
 }

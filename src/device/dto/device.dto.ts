@@ -15,8 +15,4 @@ export class DeviceDto {
 
   @IsString()
   user: User;
-
-  @IsString()
-  @IsOptional()
-  search?: string;
 }
