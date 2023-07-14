@@ -1,9 +1,10 @@
 /* eslint-disable prettier/prettier */
+import { IsNotEmptyObject } from 'class-validator';
 import { User } from 'src/auth/user.entity';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class DeviceEntity {
+export class Device {
 
   @PrimaryGeneratedColumn()
   id: string;
@@ -17,6 +18,6 @@ export class DeviceEntity {
   @Column()
   name: string;
 
-  @Column()
+  @IsNotEmptyObject()
   user: User;
 }
