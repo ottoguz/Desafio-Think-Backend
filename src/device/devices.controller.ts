@@ -8,21 +8,25 @@ import { DeviceDto } from './dto/device.dto';
 export class DevicesController {
   constructor(private devicesService: DevicesService) {}
 
+  // Método: Retorna um array de objetos(dispositivos) para busca
   @Get()
   getDevices(@Query() deviceDto: DeviceDto): Promise<Device[]> {
     return this.devicesService.getDevices(deviceDto);
   }
 
+  // Método: busca um dispositivo pelo campo "id"
   @Get('/:id')
-  getTaskById(@Param('id') id: string): Promise<Device> {
+  getDeviceById(@Param('id') id: string): Promise<Device> {
     return this.devicesService.getDeviceById(id);
   }
 
+  // Método: endpoint para a criação de um dispositivo nosistema
   @Post('/create-device')
   createDevice(@Body() deviceDto: DeviceDto): Promise<void> {
     return this.devicesService.createDevice(deviceDto);
   }
 
+  // Método: rota para deletar um dispositivo do sistema identificando pelo "id"
   @Delete('/:id')
   deleteDevice(@Param('id') id: string): Promise<void> {
     return this.devicesService.deleteDevice(id);

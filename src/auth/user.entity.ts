@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { AccountTypeEnum } from "./account-type.enum";
+import { Device } from "src/device/device.entity";
 
 @Entity()
 export class User {
@@ -27,4 +28,7 @@ export class User {
   // Col: tipo de conta
   @Column()
   accountType: AccountTypeEnum;
+  
+  @OneToMany((_type) => Device, device => device.user, { eager: true})
+  devices: Device[];
 }

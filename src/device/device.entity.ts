@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { IsNotEmptyObject } from 'class-validator';
 import { User } from 'src/auth/user.entity';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Device {
@@ -21,7 +21,7 @@ export class Device {
   @Column()
   name: string;
 
-  // Col:Usuário a quem o dispositivo pertence
-  //@IsNotEmptyObject()
+  // Col:Usuário a quem o dispositivo pertence(Rel many to one)
+  @ManyToOne((_type) => User, (user) => user.devices, { eager: false })
   user: User;
 }
