@@ -22,6 +22,6 @@ export class Device {
   name: string;
 
   // Col:Usuário a quem o dispositivo pertence
-  @IsNotEmptyObject()
+  //@IsNotEmptyObject()
   user: User;
 }
