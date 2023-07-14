@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { IsString } from "class-validator";
+import { IsOptional, IsString } from "class-validator";
 import { User } from "src/auth/user.entity";
 
 // Classe de transferência de dados do Dispositivo
@@ -15,4 +15,8 @@ export class DeviceDto {
 
   @IsString()
   user: User;
+
+  @IsString()
+  @IsOptional()
+  search?: string;
 }

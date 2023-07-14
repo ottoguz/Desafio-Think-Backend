@@ -11,6 +11,10 @@ export class DevicesService {
     private devicesRepository: DevicesRepository,
   ) {}
 
+  getDevices(deviceDto: DeviceDto): Promise<Device[]> {
+    return this.devicesRepository.getDevices(deviceDto);
+  }
+
   async getDeviceById(id: string): Promise<Device> {
     const foundDevice = await this.devicesRepository.findOneBy({ id });
 

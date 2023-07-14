@@ -10,6 +10,13 @@ export class DevicesRepository extends Repository<Device> {
     super(Device, dataSource.createEntityManager());
   }
 
+  async getDevices(deviceDto: DeviceDto): Promise<Device[]> {
+    // const {}
+    const query = this.createQueryBuilder('device');
+    const devices = await query.getMany();
+    return devices;
+  }
+
   async createDevice(deviceDto: DeviceDto): Promise<void> {
     const { type, local, name, user } = deviceDto
 
