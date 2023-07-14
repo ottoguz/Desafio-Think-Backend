@@ -4,6 +4,6 @@ import { DeviceController } from './device.controller';
 
 @Module({
   providers: [DeviceService],
-  controllers: [DeviceController]
+  controllers: [DeviceController],
 })
 export class DeviceModule {}

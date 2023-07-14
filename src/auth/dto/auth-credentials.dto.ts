@@ -2,25 +2,33 @@
 import { IsEmail, IsString, Matches, MaxLength, MinLength } from 'class-validator';
 import { AccountTypeEnum } from '../account-type.enum';
 
+// Classe de transferência de dados de autenticação de usuários
 export class AuthCredentialsDto {
+  // Nome + verificações
   @IsString()
   @MinLength(8)
   @MaxLength(20)
   firstName: string;
-
+  
+  // Sobrenome + verificações
   @IsString()
   @MinLength(8)
   @MaxLength(20)
   lastName: string;
-
+  
+  // Email + verificação
   @IsEmail()
   email: string;
-
+  
+  // Senha + verificações 
+  // (@Matches = Regex para verificar uso de caracteres especiais Upper e Lower e numero)
   @IsString()
   @MinLength(8)
   @MaxLength(32)
-  //Regex para verificar uso de caracteres especiais Upper e Lower e numero
-  @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, { message: 'Senha muito fraca!'})
+  @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, 
+    { message: 'Weak password! Must contain Upper and Lower Case, Number and Special Character'})
   password: string;
+
+  // Enum contendo os possiveis tipos de conta (OWNER, EDITOR, VIEWER)
   accountType: AccountTypeEnum;
 }

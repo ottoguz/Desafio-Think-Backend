@@ -10,12 +10,18 @@ export class UsersRepository extends Repository<User> {
     constructor(private datasource: DataSource) {
         super(User, datasource.createEntityManager())
     }
+
+  // Método: realiza a persistência dos dados do usuário no banco de dados  
   async createUser(authCredentialsDto: AuthCredentialsDto): Promise<void> {
     const { firstName, lastName, email, password, accountType } = authCredentialsDto;
+
+    // Geração de um salt
     const salt = await bcrypt.genSalt();
-
+    
+    // Criação de uma senha hashed
     const hashPassword = await bcrypt.hash(password, salt);
-
+    
+    // Criação de usuário já contendo uma senha hashed
     const user = this.create({
       firstName,
       lastName,
@@ -23,7 +29,9 @@ export class UsersRepository extends Repository<User> {
       password: hashPassword,
       accountType,
     });
-
+    
+    // Verificação se o email já existe
+    // Se já existir email no sistema usuário não será salvo no BD
     try {
       await this.save(user);    
     } catch (error){
