@@ -23,4 +23,11 @@ export class DevicesService {
   async createDevice(deviceDto: DeviceDto): Promise<void> {
     return this.devicesRepository.createDevice(deviceDto);
   }
+
+  async deleteDevice(id: string): Promise<void> {
+    const result = await this.devicesRepository.delete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException(`Device with ID: ${id} not found!`);
+    }
+  }
 }
