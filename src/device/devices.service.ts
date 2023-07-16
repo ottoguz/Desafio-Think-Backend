@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DevicesRepository } from './devices.repository';
 import { Device } from './device.entity';
@@ -14,13 +18,13 @@ export class DevicesService {
 
   // Método: faz conexão com o repositório para buscar dispositivos
   // em um array de dispositivos
-  getDevices(deviceDto: DeviceDto): Promise<Device[]> {
-    return this.devicesRepository.getDevices(deviceDto);
+  getDevices(deviceDto: DeviceDto, user: User): Promise<Device[]> {
+    return this.devicesRepository.getDevices(deviceDto, user);
   }
 
   // Método: busca um dispositivo pelo "id"
-  async getDeviceById(id: string): Promise<Device> {
-    const foundDevice = await this.devicesRepository.findOneBy({ id });
+  async getDeviceById(id: string, user: User): Promise<Device> {
+    const foundDevice = await this.devicesRepository.findOneBy({ id, user });
 
     if (!foundDevice) {
       throw new NotFoundException();
@@ -36,10 +40,16 @@ export class DevicesService {
   }
 
   // Faz uma busca de um dispositivo pelo "id" no repositório e deleta
-  async deleteDevice(id: string): Promise<void> {
-    const result = await this.devicesRepository.delete(id);
-    if (result.affected === 0) {
-      throw new NotFoundException(`Device with ID: ${id} not found!`);
+  async deleteDevice(id: string, user: User): Promise<void> {
+    if (user.accountType === 'OWNER') {
+      const result = await this.devicesRepository.delete(id);
+      if (result.affected === 0) {
+        throw new NotFoundException(`Device with ID: ${id} not found!`);
+      }
+    } else {
+      throw new UnauthorizedException(
+        'This device can only be deleted by its owner!',
+      );
     }
   }
 }

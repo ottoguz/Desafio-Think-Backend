@@ -14,14 +14,20 @@ export class DevicesController {
 
   // Método: Retorna um array de objetos(dispositivos) para busca
   @Get()
-  getDevices(@Query() deviceDto: DeviceDto): Promise<Device[]> {
-    return this.devicesService.getDevices(deviceDto);
+  getDevices(
+    @Query() deviceDto: DeviceDto,
+    @GetUser() user: User,
+  ): Promise<Device[]> {
+    return this.devicesService.getDevices(deviceDto, user);
   }
 
   // Método: busca um dispositivo pelo campo "id"
   @Get('/:id')
-  getDeviceById(@Param('id') id: string): Promise<Device> {
-    return this.devicesService.getDeviceById(id);
+  getDeviceById(
+    @Param('id') id: string,
+    @GetUser() user: User,
+  ): Promise<Device> {
+    return this.devicesService.getDeviceById(id, user);
   }
 
   // Método: endpoint para a criação de um dispositivo nosistema
@@ -35,7 +41,7 @@ export class DevicesController {
 
   // Método: rota para deletar um dispositivo do sistema identificando pelo "id"
   @Delete('/:id')
-  deleteDevice(@Param('id') id: string): Promise<void> {
-    return this.devicesService.deleteDevice(id);
+  deleteDevice(@Param('id') id: string, @GetUser() user: User): Promise<void> {
+    return this.devicesService.deleteDevice(id, user);
   }
 }

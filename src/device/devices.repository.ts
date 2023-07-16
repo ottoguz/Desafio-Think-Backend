@@ -13,9 +13,10 @@ export class DevicesRepository extends Repository<Device> {
   }
   
   // Método: Consulta um dispositivo de BD
-  async getDevices(deviceFilterDto: DeviceFilterDto): Promise<Device[]> {
+  async getDevices(deviceFilterDto: DeviceFilterDto, user: User): Promise<Device[]> {
     const { name, search } = deviceFilterDto; 
     const query = this.createQueryBuilder('device');
+    query.where({ user });
     
     if(name) {
       query.andWhere('device.name = :name', { name }) ;
@@ -23,7 +24,7 @@ export class DevicesRepository extends Repository<Device> {
     
     if (search) {
       query.andWhere(
-        'LOWER(device.name) LIKE LOWER(:search) OR LOWER(device.type) LIKE LOWER(:search)',
+        '(LOWER(device.name) LIKE LOWER(:search) OR LOWER(device.type) LIKE LOWER(:search))',
         { search: `%${search}%` },
       );
     }
@@ -35,7 +36,6 @@ export class DevicesRepository extends Repository<Device> {
   //Método: Faz a persistência de um dispositivo no BD
   async createDevice(deviceDto: DeviceDto, user: User): Promise<Device> {
     const { type, local, name } = deviceDto
-    console.log(user)
 
     const device = this.create({
       type,
