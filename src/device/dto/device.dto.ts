@@ -13,6 +13,6 @@ export class DeviceDto {
   @IsString()
   name: string;
 
-  @IsString()
+  //@IsString()
   user: User;
 }

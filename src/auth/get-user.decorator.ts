@@ -4,7 +4,7 @@ import { User } from "./user.entity";
 
 // Decorator customizado para facilitar a extração do usuário
 export const GetUser = createParamDecorator(
-  (_data, context: ExecutionContext): User => {
+  (data, context: ExecutionContext): User => {
     const request = context.switchToHttp().getRequest();
     return request.user;
   },

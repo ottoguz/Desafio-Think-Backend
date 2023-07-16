@@ -3,6 +3,8 @@ import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/commo
 import { DevicesService } from './devices.service';
 import { Device } from './device.entity';
 import { DeviceDto } from './dto/device.dto';
+import { User } from 'src/auth/user.entity';
+import { GetUser } from 'src/auth/get-user.decorator';
 
 @Controller('devices')
 export class DevicesController {
@@ -22,8 +24,12 @@ export class DevicesController {
 
   // Método: endpoint para a criação de um dispositivo nosistema
   @Post('/create-device')
-  createDevice(@Body() deviceDto: DeviceDto): Promise<void> {
-    return this.devicesService.createDevice(deviceDto);
+  createDevice(
+    @Body() deviceDto: DeviceDto,
+    @GetUser() user: User,
+  ): Promise<Device> {
+    return this.devicesService.createDevice(deviceDto, user);
+    console.log(user);
   }
 
   // Método: rota para deletar um dispositivo do sistema identificando pelo "id"

@@ -4,6 +4,7 @@ import { DataSource, Repository } from "typeorm";
 import { Device } from "./device.entity";
 import { DeviceDto } from "./dto/device.dto";
 import { DeviceFilterDto } from "./dto/device-filter.dto";
+import { User } from "src/auth/user.entity";
 
 @Injectable()
 export class DevicesRepository extends Repository<Device> {
@@ -32,15 +33,16 @@ export class DevicesRepository extends Repository<Device> {
   }
 
   //Método: Faz a persistência de um dispositivo no BD
-  async createDevice(deviceDto: DeviceDto): Promise<void> {
-    const { type, local, name, user } = deviceDto
+  async createDevice(deviceDto: DeviceDto, user: User): Promise<Device> {
+    const { type, local, name } = deviceDto
+    console.log(user)
 
     const device = this.create({
       type,
       local, 
       name, 
-      user,
     });
     await this.save(device);
+    return device;
   }
 }

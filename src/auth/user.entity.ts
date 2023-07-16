@@ -29,6 +29,6 @@ export class User {
   @Column()
   accountType: AccountTypeEnum;
   
-  @OneToMany((_type) => Device, device => device.user, { eager: true})
+  @OneToMany((_type) => Device, (device) => device.user, { eager: true })
   devices: Device[];
 }

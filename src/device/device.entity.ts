@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { IsNotEmptyObject } from 'class-validator';
+import { Exclude } from 'class-transformer';
 import { User } from 'src/auth/user.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
@@ -23,5 +23,6 @@ export class Device {
 
   // Col:Usuário a quem o dispositivo pertence(Rel many to one)
   @ManyToOne((_type) => User, (user) => user.devices, { eager: false })
+  @Exclude({ toPlainOnly: true })
   user: User;
 }

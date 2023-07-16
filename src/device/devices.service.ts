@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DevicesRepository } from './devices.repository';
 import { Device } from './device.entity';
 import { DeviceDto } from './dto/device.dto';
+import { User } from 'src/auth/user.entity';
 
 @Injectable()
 export class DevicesService {
@@ -29,8 +30,9 @@ export class DevicesService {
 
   // Método: transfere os dados de um novo dispositivo ao sistema
   // E cria um novo dispositivo para o repositório
-  async createDevice(deviceDto: DeviceDto): Promise<void> {
-    return this.devicesRepository.createDevice(deviceDto);
+  createDevice(deviceDto: DeviceDto, user: User): Promise<Device> {
+    return this.devicesRepository.createDevice(deviceDto, user);
+    console.log(user);
   }
 
   // Faz uma busca de um dispositivo pelo "id" no repositório e deleta
