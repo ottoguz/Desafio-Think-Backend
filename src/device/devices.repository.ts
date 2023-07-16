@@ -41,6 +41,7 @@ export class DevicesRepository extends Repository<Device> {
       type,
       local, 
       name, 
+      user,
     });
     await this.save(device);
     return device;

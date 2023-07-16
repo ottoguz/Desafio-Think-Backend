@@ -1,12 +1,14 @@
 // eslint-disable-next-line prettier/prettier
-import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
 import { DevicesService } from './devices.service';
 import { Device } from './device.entity';
 import { DeviceDto } from './dto/device.dto';
 import { User } from 'src/auth/user.entity';
 import { GetUser } from 'src/auth/get-user.decorator';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('devices')
+@UseGuards(AuthGuard())
 export class DevicesController {
   constructor(private devicesService: DevicesService) {}
 
@@ -29,7 +31,6 @@ export class DevicesController {
     @GetUser() user: User,
   ): Promise<Device> {
     return this.devicesService.createDevice(deviceDto, user);
-    console.log(user);
   }
 
   // Método: rota para deletar um dispositivo do sistema identificando pelo "id"
