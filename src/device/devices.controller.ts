@@ -6,18 +6,25 @@ import { DeviceDto } from './dto/device.dto';
 import { User } from 'src/auth/user.entity';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { AuthGuard } from '@nestjs/passport';
+import { Logger } from '@nestjs/common';
 
 @Controller('devices')
 @UseGuards(AuthGuard())
 export class DevicesController {
+  private logger = new Logger('DevicesController');
   constructor(private devicesService: DevicesService) {}
 
-  // Método: Retorna um array de objetos(dispositivos) para busca
+  // Método: Recupera todos dispositivos pertencentes a um usuário
   @Get()
   getDevices(
     @Query() deviceDto: DeviceDto,
     @GetUser() user: User,
   ): Promise<Device[]> {
+    this.logger.verbose(
+      `User: "${user.email}" retrieving all devices .Filters: ${JSON.stringify(
+        deviceDto,
+      )}`,
+    );
     return this.devicesService.getDevices(deviceDto, user);
   }
 
@@ -36,6 +43,11 @@ export class DevicesController {
     @Body() deviceDto: DeviceDto,
     @GetUser() user: User,
   ): Promise<Device> {
+    this.logger.verbose(
+      `User: "${user.email}" creating a new device .Data: ${JSON.stringify(
+        deviceDto,
+      )}`,
+    );
     return this.devicesService.createDevice(deviceDto, user);
   }
 

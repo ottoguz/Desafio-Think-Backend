@@ -1,13 +1,16 @@
 /* eslint-disable prettier/prettier */
-import { Injectable } from "@nestjs/common";
+import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { DataSource, Repository } from "typeorm";
 import { Device } from "./device.entity";
 import { DeviceDto } from "./dto/device.dto";
 import { DeviceFilterDto } from "./dto/device-filter.dto";
 import { User } from "src/auth/user.entity";
+import { Logger } from "@nestjs/common";
 
 @Injectable()
 export class DevicesRepository extends Repository<Device> {
+  // true = apresentará o timestamp da execução
+  private logger = new Logger('DevicesRepository, true')
   constructor(private dataSource: DataSource) {
     super(Device, dataSource.createEntityManager());
   }
@@ -28,9 +31,20 @@ export class DevicesRepository extends Repository<Device> {
         { search: `%${search}%` },
       );
     }
-
-    const devices = await query.getMany();
-    return devices;
+    
+    // Tentará recuperar dispositivos do banco de dados
+    // Se houver algum erro será retornado como log no terminal (c/ stacktrace)
+    try {
+      const devices = await query.getMany();
+      return devices;
+    } catch (error) {
+      this.logger.error(
+        `Failed to get tasks for user "${
+          user.email}" .Filters: ${JSON.stringify(deviceFilterDto)}`,
+          error.stack,
+        );
+        throw new InternalServerErrorException();
+    }
   }
 
   //Método: Faz a persistência de um dispositivo no BD
