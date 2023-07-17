@@ -1,5 +1,5 @@
 // eslint-disable-next-line prettier/prettier
-import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { DevicesService } from './devices.service';
 import { Device } from './device.entity';
 import { DeviceDto } from './dto/device.dto';
@@ -49,6 +49,15 @@ export class DevicesController {
       )}`,
     );
     return this.devicesService.createDevice(deviceDto, user);
+  }
+
+  @Patch('/:id/update-device')
+  updateDevice(
+    @Param('id') id: string,
+    @Body() deviceDto: DeviceDto,
+  ): Promise<Device> {
+    const { type, local, name, user } = deviceDto;
+    return this.devicesService.updateDevice(id, type, local, name, user);
   }
 
   // Método: rota para deletar um dispositivo do sistema identificando pelo "id"
