@@ -39,6 +39,8 @@ export class DevicesService {
     console.log(user);
   }
 
+  //Método: atualiza no repositório as informações atualizadas
+  // de um dispositivo atrelado a um usuário
   async updateDevice(
     id: string,
     type: string,

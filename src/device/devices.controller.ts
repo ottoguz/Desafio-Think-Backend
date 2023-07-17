@@ -51,6 +51,8 @@ export class DevicesController {
     return this.devicesService.createDevice(deviceDto, user);
   }
 
+  // Método: rota para atualizar informações de um dispositivo
+  // atrelado a um id e um usuário
   @Patch('/:id/update-device')
   updateDevice(
     @Param('id') id: string,

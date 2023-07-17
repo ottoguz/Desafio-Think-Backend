@@ -23,11 +23,15 @@ export class AuthController {
     return this.authService.signIn(authCredentialsDto);
   }
 
+  // Método: rota para a busca de um usuário atrelado
+  // a um id
   @Get('/:id')
   getUserById(@Param('id') id: string): Promise<User> {
     return this.authService.getUserById(id);
   }
 
+  //Método: rota para atualizar os dados de um usuário
+  // (Logado e autenticado com jwt)
   @Patch('/:id/update-user')
   updateUser(
     @Param('id') id: string,

@@ -8,6 +8,10 @@ import { configValidationSchema } from './config.schema';
 
 @Module({
   imports: [
+    // Configuração para elencar a concexão com banco de dados
+    // Fazendo uso de diferentes ambientes(start:dev/start:debug/start:prod/test)
+    // Vide arquivo package.json "scripts": {...}
+    //OBS: param "cross-env" é necessário para que a conexão ocorra em ambientes Windows
     ConfigModule.forRoot({
       envFilePath: [`.env.stage.${process.env.STAGE}`],
       validationSchema: configValidationSchema,
@@ -22,6 +26,7 @@ import { configValidationSchema } from './config.schema';
           entities: [join(__dirname, '../', '**', '*.entity.js')],
           autoLoadEntities: true,
           synchronize: true,
+          // Conexão com o banco de dados via variável de ambiente
           host: confService.get('DB_HOST'),
           port: confService.get('DB_PORT'),
           username: confService.get('DB_USERNAME'),
