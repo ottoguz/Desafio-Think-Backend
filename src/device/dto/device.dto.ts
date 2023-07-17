@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
-import { IsOptional, IsString } from "class-validator";
+import { IsString } from "class-validator";
 import { User } from "src/auth/user.entity";
+import { SharingLevelEnum } from "../sharing-level.enum";
 
 // Classe de transferência de dados do Dispositivo
 export class DeviceDto {
@@ -13,6 +14,8 @@ export class DeviceDto {
   @IsString()
   name: string;
 
-  //@IsString()
+  @IsString()
   user: User;
+
+  sharingLevel: SharingLevelEnum
 }

@@ -1,6 +1,5 @@
 /* eslint-disable prettier/prettier */
 import { IsEmail, IsEnum, IsString, Matches, MaxLength, MinLength } from 'class-validator';
-import { AccountTypeEnum } from '../account-type.enum';
 
 // Classe de transferência de dados de autenticação de usuários
 export class AuthCredentialsDto {
@@ -28,8 +27,4 @@ export class AuthCredentialsDto {
   @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, 
     { message: 'Weak password! Must contain Upper and Lower Case, Number and Special Character'})
   password: string;
-
-  // Enum contendo os possiveis tipos de conta (OWNER, EDITOR, VIEWER)
-  @IsEnum(AccountTypeEnum)
-  accountType: AccountTypeEnum;
 }

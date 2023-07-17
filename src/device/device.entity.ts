@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Exclude } from 'class-transformer';
+import { SharingLevelEnum } from 'src/device/sharing-level.enum';
 import { User } from 'src/auth/user.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
@@ -20,6 +21,9 @@ export class Device {
   // Col:Nome do dispositivo
   @Column()
   name: string;
+
+  @Column({ default: 'OWNER'})
+  sharingLevel: SharingLevelEnum
 
   // Col:Usuário a quem o dispositivo pertence(Rel many to one)
   @ManyToOne((_type) => User, (user) => user.devices, { eager: false })

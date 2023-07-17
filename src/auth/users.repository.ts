@@ -13,7 +13,7 @@ export class UsersRepository extends Repository<User> {
 
   // Método: realiza a persistência dos dados do usuário no banco de dados  
   async createUser(authCredentialsDto: AuthCredentialsDto): Promise<void> {
-    const { firstName, lastName, email, password, accountType } = authCredentialsDto;
+    const { firstName, lastName, email, password } = authCredentialsDto;
 
     // Geração de um salt
     const salt = await bcrypt.genSalt();
@@ -27,7 +27,6 @@ export class UsersRepository extends Repository<User> {
       lastName,
       email,
       password: hashPassword,
-      accountType,
     });
     
     // Verificação se o email já existe

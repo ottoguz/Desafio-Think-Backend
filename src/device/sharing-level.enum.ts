@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 
-// Enum contendo os possiveis tipos de conta
-export enum AccountTypeEnum {
+// Enum contendo os nívies de compartilhamento
+export enum SharingLevelEnum {
   OWNER = 'OWNER',
   EDITOR = 'EDITOR',
   VIEWER = 'VIEWER',

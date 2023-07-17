@@ -10,7 +10,7 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './jwt-payload.interface';
 import { User } from './user.entity';
-import { AccountTypeEnum } from './account-type.enum';
+import { SharingLevelEnum } from '../device/sharing-level.enum';
 
 @Injectable()
 export class AuthService {
@@ -63,14 +63,12 @@ export class AuthService {
     lastName: string,
     email: string,
     password: string,
-    accountType: AccountTypeEnum,
   ): Promise<User> {
     const user = await this.getUserById(id);
     user.firstName = firstName;
     user.lastName = lastName;
     user.email = email;
     user.password = password;
-    user.accountType = accountType;
 
     await this.usersRepository.save(user);
     return user;

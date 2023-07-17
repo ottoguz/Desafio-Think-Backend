@@ -38,14 +38,13 @@ export class AuthController {
     @Body() authCredentialsDto: AuthCredentialsDto,
   ): Promise<User> {
     // eslint-disable-next-line prettier/prettier
-    const { firstName, lastName, email, password, accountType } = authCredentialsDto;
+    const { firstName, lastName, email, password } = authCredentialsDto;
     return this.authService.updateUser(
       id,
       firstName,
       lastName,
       email,
       password,
-      accountType,
     );
   }
 }

@@ -59,7 +59,8 @@ export class DevicesService {
 
   // Faz uma busca de um dispositivo pelo "id" no repositório e deleta
   async deleteDevice(id: string, user: User): Promise<void> {
-    if (user.accountType === 'OWNER') {
+    const device = this.getDeviceById(id, user);
+    if ((await device).sharingLevel === 'OWNER') {
       const result = await this.devicesRepository.delete({ id, user });
       if (result.affected === 0) {
         throw new NotFoundException(`Device with ID: ${id} not found!`);
