@@ -5,6 +5,7 @@ import { DeviceModule } from './device/devices.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { join } from 'path';
 import { configValidationSchema } from './config.schema';
+import { SharedDevicesModule } from './shared-devices/shared-devices.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { configValidationSchema } from './config.schema';
       },
     }),
     DeviceModule,
+    SharedDevicesModule,
   ],
 })
 export class AppModule {}
