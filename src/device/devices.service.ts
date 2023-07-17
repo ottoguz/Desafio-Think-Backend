@@ -39,6 +39,22 @@ export class DevicesService {
     console.log(user);
   }
 
+  async updateDevice(
+    id: string,
+    type: string,
+    local: string,
+    name: string,
+    user: User,
+  ): Promise<Device> {
+    const device = await this.getDeviceById(id, user);
+    device.type = type;
+    device.local = local;
+    device.name = name;
+
+    await this.devicesRepository.save(device);
+    return device;
+  }
+
   // Faz uma busca de um dispositivo pelo "id" no repositório e deleta
   async deleteDevice(id: string, user: User): Promise<void> {
     if (user.accountType === 'OWNER') {
