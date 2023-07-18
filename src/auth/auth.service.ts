@@ -10,7 +10,6 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './jwt-payload.interface';
 import { User } from './user.entity';
-import { SharingLevelEnum } from '../device/sharing-level.enum';
 
 @Injectable()
 export class AuthService {
@@ -32,14 +31,16 @@ export class AuthService {
     authCredentialsDto: AuthCredentialsDto,
   ): Promise<{ accessToken: string }> {
     const { email, password } = authCredentialsDto;
-    const user = await this.usersRepository.findOneBy({ email });
+    const user = await this.usersRepository
+      .createQueryBuilder('user')
+      .where('user.email = :email', { email: email })
+      .getOne();
 
     // Verificação se usuário existe e se a senha está correta
     if (user && (await bcrypt.compare(password, user.password))) {
       const payload: JwtPayload = { email };
-      const accessToken = await this.jwtService.sign(payload);
+      const accessToken = this.jwtService.sign(payload);
       return { accessToken };
-      console.log({ accessToken });
     } else {
       throw new UnauthorizedException('Please check your login credentials');
     }

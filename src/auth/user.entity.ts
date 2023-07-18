@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Device } from "src/device/device.entity";
 
 @Entity()
@@ -26,4 +26,5 @@ export class User {
   
   @OneToMany((_type) => Device, (device) => device.user, { eager: true })
   devices: Device[];
+  id: any;
 }

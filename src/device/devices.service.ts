@@ -41,12 +41,12 @@ export class DevicesService {
   //Método: atualiza no repositório as informações atualizadas
   // de um dispositivo atrelado a um usuário
   async updateDevice(
-    id: string,
+    deviceId: string,
     type: string,
     local: string,
     name: string,
   ): Promise<Device> {
-    const device = await this.getDeviceById(id);
+    const device = await this.getDeviceById(deviceId);
     device.type = type;
     device.local = local;
     device.name = name;
