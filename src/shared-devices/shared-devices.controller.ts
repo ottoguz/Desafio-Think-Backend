@@ -1,25 +1,23 @@
-import { Controller, Post, Delete, Param, Body, Get } from '@nestjs/common';
+import { Controller, Post, Param } from '@nestjs/common';
 import { SharedDevicesService } from './shared-devices.service';
-import { User } from 'src/auth/user.entity';
 import { Device } from 'src/device/device.entity';
+import { SharedDevicesDto } from './dto/shared-devices.dto';
 
 @Controller('shared-devices')
 export class SharedDevicesController {
-  constructor(private readonly sharedDevicesService: SharedDevicesService) {}
+  constructor(private sharedDevicesService: SharedDevicesService) {}
 
-  @Get()
-  async associateDeviceToUser(
-    @Param('userId') userId: string,
-    @Param('deviceId') deviceId: string,
-  ): Promise<void> {
-    await this.sharedDevicesService.associateDeviceToUser(userId, deviceId);
+  @Post()
+  associateDeviceToUser(sharedDevicesDto: SharedDevicesDto): Promise<Device> {
+    console.log(sharedDevicesDto);
+    return this.sharedDevicesService.associateDeviceToUser(sharedDevicesDto);
   }
-
+  /*
   @Delete(':userId/devices/:deviceId')
   async disassociateDeviceFromUser(
     @Param('userId') userId: string,
     @Param('deviceId') deviceId: string,
   ): Promise<void> {
     await this.sharedDevicesService.disassociateDeviceFromUser();
-  }
+  }*/
 }
