@@ -46,8 +46,8 @@ export class AuthService {
   }
 
   // Método: busca um usuário do repositório com base no seu id
-  async getUserById(id: string): Promise<User> {
-    const foundUser = await this.usersRepository.findOneBy({ id });
+  async getUserById(userId: string): Promise<User> {
+    const foundUser = await this.usersRepository.findOneBy({ userId });
 
     if (!foundUser) {
       throw new NotFoundException();
@@ -58,13 +58,13 @@ export class AuthService {
   //Método: busca um usuário existente no repositório e
   // de fato faz a atualização dos dados de usuário no banco de dados
   async updateUser(
-    id: string,
+    userId: string,
     firstName: string,
     lastName: string,
     email: string,
     password: string,
   ): Promise<User> {
-    const user = await this.getUserById(id);
+    const user = await this.getUserById(userId);
     user.firstName = firstName;
     user.lastName = lastName;
     user.email = email;

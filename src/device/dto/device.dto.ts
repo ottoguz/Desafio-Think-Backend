@@ -6,6 +6,9 @@ import { SharingLevelEnum } from "../sharing-level.enum";
 // Classe de transferência de dados do Dispositivo
 export class DeviceDto {
   @IsString()
+  deviceId: string;
+
+  @IsString()
   type: string;
 
   @IsString()

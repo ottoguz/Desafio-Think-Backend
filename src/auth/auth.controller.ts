@@ -25,22 +25,22 @@ export class AuthController {
 
   // Método: rota para a busca de um usuário atrelado
   // a um id
-  @Get('/:id')
-  getUserById(@Param('id') id: string): Promise<User> {
-    return this.authService.getUserById(id);
+  @Get('/:userId')
+  getUserById(@Param('userId') userId: string): Promise<User> {
+    return this.authService.getUserById(userId);
   }
 
   //Método: rota para atualizar os dados de um usuário
   // (Logado e autenticado com jwt)
-  @Patch('/:id/update-user')
+  @Patch('/:userId/update-user')
   updateUser(
-    @Param('id') id: string,
+    @Param('userId') userId: string,
     @Body() authCredentialsDto: AuthCredentialsDto,
   ): Promise<User> {
     // eslint-disable-next-line prettier/prettier
     const { firstName, lastName, email, password } = authCredentialsDto;
     return this.authService.updateUser(
-      id,
+      userId,
       firstName,
       lastName,
       email,

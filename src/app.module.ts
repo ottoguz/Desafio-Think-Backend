@@ -6,6 +6,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { join } from 'path';
 import { configValidationSchema } from './config.schema';
 import { SharedDevicesModule } from './shared-devices/shared-devices.module';
+//import { SharedDevicesModule } from './shared-devices/shared-devices.module';
 
 @Module({
   imports: [
@@ -17,7 +18,6 @@ import { SharedDevicesModule } from './shared-devices/shared-devices.module';
       envFilePath: [`.env.stage.${process.env.STAGE}`],
       validationSchema: configValidationSchema,
     }),
-    AuthModule,
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -36,8 +36,9 @@ import { SharedDevicesModule } from './shared-devices/shared-devices.module';
         };
       },
     }),
+    AuthModule,
     DeviceModule,
-    SharedDevicesModule,
+    //SharedDevicesModule,
   ],
 })
 export class AppModule {}

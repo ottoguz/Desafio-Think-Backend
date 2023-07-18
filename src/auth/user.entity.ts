@@ -6,7 +6,7 @@ import { Device } from "src/device/device.entity";
 export class User {
   // Primary key
   @PrimaryGeneratedColumn('uuid')  
-  id: string;
+  userId: string;
   
   // Col: nome
   @Column()
@@ -24,6 +24,6 @@ export class User {
   @Column()
   password: string;
   
-  @ManyToMany((_type) => Device, (device) => device.user, { eager: true })
+  @OneToMany((_type) => Device, (device) => device.user, { eager: true })
   devices: Device[];
 }

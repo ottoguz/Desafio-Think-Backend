@@ -23,8 +23,8 @@ export class DevicesService {
   }
 
   // Método: busca um dispositivo pelo "id"
-  async getDeviceById(id: string, user: User): Promise<Device> {
-    const foundDevice = await this.devicesRepository.findOneBy({ id, user });
+  async getDeviceById(deviceId: string): Promise<Device> {
+    const foundDevice = await this.devicesRepository.findOneBy({ deviceId });
 
     if (!foundDevice) {
       throw new NotFoundException();
@@ -36,7 +36,6 @@ export class DevicesService {
   // E cria um novo dispositivo para o repositório
   createDevice(deviceDto: DeviceDto, user: User): Promise<Device> {
     return this.devicesRepository.createDevice(deviceDto, user);
-    console.log(user);
   }
 
   //Método: atualiza no repositório as informações atualizadas
@@ -46,9 +45,8 @@ export class DevicesService {
     type: string,
     local: string,
     name: string,
-    user: User,
   ): Promise<Device> {
-    const device = await this.getDeviceById(id, user);
+    const device = await this.getDeviceById(id);
     device.type = type;
     device.local = local;
     device.name = name;
@@ -58,12 +56,12 @@ export class DevicesService {
   }
 
   // Faz uma busca de um dispositivo pelo "id" no repositório e deleta
-  async deleteDevice(id: string, user: User): Promise<void> {
-    const device = this.getDeviceById(id, user);
+  async deleteDevice(deviceId: string, user: User): Promise<void> {
+    const device = this.getDeviceById(deviceId);
     if ((await device).sharingLevel === 'OWNER') {
-      const result = await this.devicesRepository.delete({ id, user });
+      const result = await this.devicesRepository.delete({ deviceId, user });
       if (result.affected === 0) {
-        throw new NotFoundException(`Device with ID: ${id} not found!`);
+        throw new NotFoundException(`Device with ID: ${deviceId} not found!`);
       }
     } else {
       throw new UnauthorizedException(
