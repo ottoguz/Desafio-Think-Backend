@@ -6,15 +6,20 @@ import { DevicesRepository } from 'src/device/devices.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DeviceModule } from 'src/device/devices.module';
 import { AuthModule } from 'src/auth/auth.module';
+import { AuthService } from 'src/auth/auth.service';
+import { DevicesService } from 'src/device/devices.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UsersRepository, DevicesRepository])],
+  imports: [TypeOrmModule.forFeature([UsersRepository])],
   controllers: [SharedDevicesController],
   providers: [
     SharedDevicesService,
+    AuthService,
+    DevicesService,
+    JwtService,
     UsersRepository,
     DevicesRepository,
-    DeviceModule,
   ],
 })
 export class SharedDevicesModule {}

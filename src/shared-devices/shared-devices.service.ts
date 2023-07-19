@@ -6,22 +6,37 @@ import { DevicesService } from 'src/device/devices.service';
 import { SharedDevicesDto } from './dto/shared-devices.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UsersRepository } from 'src/auth/users.repository';
+import { DevicesRepository } from 'src/device/devices.repository';
+import { DeviceDto } from 'src/device/dto/device.dto';
+import { use } from 'passport';
 
 @Injectable()
 export class SharedDevicesService {
   constructor(
     @InjectRepository(UsersRepository)
+    @InjectRepository(DevicesRepository)
     private usersRepository: UsersRepository,
+    private devicesRepository: DevicesRepository,
     private authService: AuthService,
     private devicesService: DevicesService,
   ) {}
 
-  async associateDeviceToUser(
-    sharedDevicesDto: SharedDevicesDto,
-  ): Promise<Device> {
-    const { userId, deviceId } = sharedDevicesDto;
+  async associateDeviceToUser(userId: string, deviceId: string): Promise<User> {
     console.log(userId);
-    return;
+    const user = await this.usersRepository
+      .createQueryBuilder('user')
+      .where('user.userId = :userId', { userId: userId })
+      .getOne();
+    /*  
+    const device = await this.usersRepository
+      .createQueryBuilder('devices')
+      .where('user.devices = :devices', {
+        deviceId: deviceId,
+      })
+      .getOne();*/
+    console.log(user);
+    //console.log(device);
+    return user;
   }
 
   /*

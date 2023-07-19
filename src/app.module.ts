@@ -38,7 +38,7 @@ import { SharedDevicesModule } from './shared-devices/shared-devices.module';
     }),
     AuthModule,
     DeviceModule,
-    //SharedDevicesModule,
+    SharedDevicesModule,
   ],
 })
 export class AppModule {}
