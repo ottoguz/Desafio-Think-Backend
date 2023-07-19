@@ -24,17 +24,7 @@ export class SharedDevicesService {
   ) {}
 
   async shareDeviceToUser(sharedDeviceDto: SharedDeviceDto): Promise<void> {
-    const { userId, deviceId, sharingLevel } = sharedDeviceDto;
-    const foundDevice = await this.devicesRepository
-      .createQueryBuilder('device')
-      .where('device.deviceId = :deviceId', { deviceId: deviceId })
-      .getOne();
-
-    return this.sharedDevicesRepository.shareDeviceToUser(
-      userId,
-      foundDevice,
-      sharingLevel,
-    );
+    return this.sharedDevicesRepository.shareDeviceToUser(sharedDeviceDto);
   }
 
   /*

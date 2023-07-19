@@ -29,6 +29,6 @@ export class User {
   devices: Device[];
   id: any;
 
-  @OneToMany(() => SharedDevice, sharedDevice => sharedDevice.device)
+  @OneToMany(() => SharedDevice, sharedDevice => sharedDevice.deviceId)
   public sharedDevice: SharedDevice[];
 }

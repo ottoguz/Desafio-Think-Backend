@@ -1,9 +1,6 @@
 import { Controller, Post, Param, Body, Get, Patch } from '@nestjs/common';
 import { SharedDevicesService } from './shared-devices.service';
-import { Device } from 'src/device/device.entity';
 import { SharedDeviceDto } from './dto/shared-device.dto';
-import { User } from 'src/auth/user.entity';
-import { DeviceDto } from 'src/device/dto/device.dto';
 
 @Controller('shared-devices')
 export class SharedDevicesController {

@@ -49,7 +49,6 @@ export class AuthService {
   // Método: busca um usuário do repositório com base no seu id
   async getUserById(userId: string): Promise<User> {
     const foundUser = await this.usersRepository.findOneBy({ userId });
-
     if (!foundUser) {
       throw new NotFoundException();
     }
