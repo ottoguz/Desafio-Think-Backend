@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Device } from "src/device/device.entity";
+import { SharedDevice } from "src/shared-devices/shared-device.entity";
 
 @Entity()
 export class User {
@@ -27,4 +28,7 @@ export class User {
   @OneToMany((_type) => Device, (device) => device.user, { eager: true })
   devices: Device[];
   id: any;
+
+  @OneToMany(() => SharedDevice, sharedDevice => sharedDevice.device)
+  public sharedDevice: SharedDevice[];
 }

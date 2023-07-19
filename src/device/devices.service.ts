@@ -57,12 +57,21 @@ export class DevicesService {
 
   // Faz uma busca de um dispositivo pelo "id" no repositório e deleta
   async deleteDevice(deviceId: string, user: User): Promise<void> {
-    const device = this.getDeviceById(deviceId);
+    //const device = this.getDeviceById(deviceId);
+    /*
     if ((await device).sharingLevel === 'OWNER') {
       const result = await this.devicesRepository.delete({ deviceId, user });
       if (result.affected === 0) {
         throw new NotFoundException(`Device with ID: ${deviceId} not found!`);
       }
+    } else {
+      throw new UnauthorizedException(
+        'This device can only be deleted by its owner!',
+      );
+    }*/
+    const result = await this.devicesRepository.delete({ deviceId, user });
+    if (result.affected === 0) {
+      throw new NotFoundException(`Device with ID: ${deviceId} not found!`);
     } else {
       throw new UnauthorizedException(
         'This device can only be deleted by its owner!',
