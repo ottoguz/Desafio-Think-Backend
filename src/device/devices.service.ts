@@ -9,12 +9,14 @@ import { DevicesRepository } from './devices.repository';
 import { Device } from './device.entity';
 import { DeviceDto } from './dto/device.dto';
 import { User } from 'src/auth/user.entity';
+import { SharedDevicesRepository } from 'src/shared-devices/shared-devices.repository';
 
 @Injectable()
 export class DevicesService {
   constructor(
     @InjectRepository(DevicesRepository)
     private devicesRepository: DevicesRepository,
+    private sharedDevicesRepository: SharedDevicesRepository
   ) {}
 
   // Método: faz conexão com o repositório para buscar dispositivos
@@ -58,9 +60,10 @@ export class DevicesService {
 
   // Faz uma busca de um dispositivo pelo "id" no repositório e deleta
   async deleteDevice(deviceId: string, user: User): Promise<void> {
-    //const device = this.getDeviceById(deviceId);
+    const device = this.getDeviceById(deviceId);
+    const sharingLevel = this.sharedDevicesRepository.findOneBy({ deviceId })
     /*
-    if ((await device).sharingLevel === 'OWNER') {
+    if ((await sharingLevel).sharingLevel === 'OWNER' && (await device).deviceId === (await sharingLevel).deviceId) {
       const result = await this.devicesRepository.delete({ deviceId, user });
       if (result.affected === 0) {
         throw new NotFoundException(`Device with ID: ${deviceId} not found!`);
@@ -69,7 +72,8 @@ export class DevicesService {
       throw new UnauthorizedException(
         'This device can only be deleted by its owner!',
       );
-    }*/
+    }
+    /*
     const result = await this.devicesRepository.delete({ deviceId, user });
     if (result.affected === 0) {
       throw new NotFoundException(`Device with ID: ${deviceId} not found!`);
@@ -77,6 +81,6 @@ export class DevicesService {
       throw new UnauthorizedException(
         'This device can only be deleted by its owner!',
       );
-    }
+    }*/
   }
 }

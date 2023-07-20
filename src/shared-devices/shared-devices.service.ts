@@ -25,8 +25,8 @@ export class SharedDevicesService {
     private sharedDevicesRepository: SharedDevicesRepository,
   ) {}
 
-  async shareDeviceToUser(sharedDeviceDto: SharedDeviceDto, sharedDevice: SharedDevice): Promise<void> {
-    return this.sharedDevicesRepository.shareDeviceToUser(sharedDeviceDto, sharedDevice);
+  async shareDeviceToUser(sharedDeviceDto: SharedDeviceDto): Promise<void> {
+    return this.sharedDevicesRepository.shareDeviceToUser(sharedDeviceDto);
   }
 
   /*

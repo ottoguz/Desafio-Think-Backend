@@ -27,8 +27,4 @@ export class User {
   
   @OneToMany((_type) => Device, (device) => device.user, { eager: true })
   devices: Device[];
-  //id: any;
-
-  //@OneToMany(() => SharedDevice, (sharedDevice: SharedDevice) => sharedDevice.device)
-  //sharedDevice: SharedDevice[];
 }

@@ -14,12 +14,12 @@ export class SharedDevicesRepository extends Repository<SharedDevice> {
     private datasource: DataSource,
     private usersRepository: UsersRepository,
     private devicesRepository: DevicesRepository,
-    private devicesService: DevicesService
+    //private devicesService: DevicesService,
     ) {
     super(SharedDevice, datasource.createEntityManager());
   }
 
-  async shareDeviceToUser(sharedDeviceDto: SharedDeviceDto, sharedDevice: SharedDevice): Promise<void> {
+  async shareDeviceToUser(sharedDeviceDto: SharedDeviceDto): Promise<void> {
     const { userId, deviceId, sharingLevel } = sharedDeviceDto;
     const foundUser = await this.usersRepository.findOneBy({ userId: userId });
     const foundDevice = await this.devicesRepository.findOneBy({ deviceId: deviceId })
@@ -27,8 +27,7 @@ export class SharedDevicesRepository extends Repository<SharedDevice> {
     console.log(foundDevice);
     foundUser.devices.push(foundDevice)
     await this.usersRepository.save(foundUser);
-    //const sharedDevices = this.usersRepository.create(foundDevice)
-    //await this.save(sharedDevices)
+    
     const sharingLv = this.create({
       userId: userId,
       deviceId: deviceId,
