@@ -18,9 +18,9 @@ export class SharedDevice {
   @Column()
   sharingLevel: SharingLevelEnum;
 
-  @ManyToOne(() => User, (user: User) => user.sharedDevice)
-  user: User[];
+  //@ManyToOne(() => User, (user: User) => user.sharedDevice)
+  //user: User[];
 
-  @ManyToOne(() => Device, (device: Device) => device.sharedDevice)
-  device: Device[];
+  //@ManyToOne(() => Device, (device: Device) => device.sharedDevice)
+  //device: Device[];
 }

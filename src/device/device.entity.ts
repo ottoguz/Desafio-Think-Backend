@@ -31,8 +31,8 @@ export class Device {
   @Exclude({ toPlainOnly: true })
   user: User;
 
-  @OneToMany(() => SharedDevice, sharedDevice => sharedDevice.user)
-  public sharedDevice: SharedDevice[];
+  //@OneToMany(() => SharedDevice, sharedDevice => sharedDevice.user)
+  //public sharedDevice: SharedDevice[];
 
   // Col:Usuário a quem o dispositivo pertence(Rel many to one)
   //@ManyToMany(() => User)
