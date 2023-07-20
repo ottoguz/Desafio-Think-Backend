@@ -18,7 +18,7 @@ export class DevicesService {
     private devicesRepository: DevicesRepository,
     private sharedDevicesRepository: SharedDevicesRepository
   ) {}
-
+  
   // Método: faz conexão com o repositório para buscar dispositivos
   // em um array de dispositivos
   getDevices(deviceDto: DeviceDto, user: User): Promise<Device[]> {
@@ -50,19 +50,27 @@ export class DevicesService {
     name: string,
   ): Promise<Device> {
     const device = await this.getDeviceById(deviceId);
-    device.type = type;
-    device.local = local;
-    device.name = name;
-
-    await this.devicesRepository.save(device);
-    return device;
+    const sharingLevel = this.sharedDevicesRepository.findOneBy({ deviceId })
+    if ((await sharingLevel).sharingLevel === 'OWNER' || 
+        (await sharingLevel).sharingLevel === 'EDITOR' && 
+         device.deviceId === (await sharingLevel).deviceId) {
+      device.type = type;
+      device.local = local;
+      device.name = name;
+      await this.devicesRepository.save(device);
+      return device;
+    } else {
+      throw new UnauthorizedException(
+        'This device can only be edited by owners or editors!',
+      );
+    }
   }
 
   // Faz uma busca de um dispositivo pelo "id" no repositório e deleta
   async deleteDevice(deviceId: string, user: User): Promise<void> {
     const device = this.getDeviceById(deviceId);
     const sharingLevel = this.sharedDevicesRepository.findOneBy({ deviceId })
-    /*
+    
     if ((await sharingLevel).sharingLevel === 'OWNER' && (await device).deviceId === (await sharingLevel).deviceId) {
       const result = await this.devicesRepository.delete({ deviceId, user });
       if (result.affected === 0) {
@@ -73,14 +81,5 @@ export class DevicesService {
         'This device can only be deleted by its owner!',
       );
     }
-    /*
-    const result = await this.devicesRepository.delete({ deviceId, user });
-    if (result.affected === 0) {
-      throw new NotFoundException(`Device with ID: ${deviceId} not found!`);
-    } else {
-      throw new UnauthorizedException(
-        'This device can only be deleted by its owner!',
-      );
-    }*/
   }
 }
