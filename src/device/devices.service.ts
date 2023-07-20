@@ -10,6 +10,7 @@ import { Device } from './device.entity';
 import { DeviceDto } from './dto/device.dto';
 import { User } from 'src/auth/user.entity';
 import { SharedDevicesRepository } from 'src/shared-devices/shared-devices.repository';
+import { any } from '@hapi/joi';
 
 @Injectable()
 export class DevicesService {
@@ -66,16 +67,19 @@ export class DevicesService {
     }
   }
 
-  // Faz uma busca de um dispositivo pelo "id" no repositório e deleta
+   // Faz uma busca de um dispositivo pelo "id" no repositório e deleta
   async deleteDevice(deviceId: string, user: User): Promise<void> {
-    const device = this.getDeviceById(deviceId);
-    const sharingLevel = this.sharedDevicesRepository.findOneBy({ deviceId })
+    const device = await this.getDeviceById(deviceId);
+    const sharedDevice = await this.sharedDevicesRepository.findOneBy({ deviceId })
+    console.log(sharedDevice.sharingLevel === 'OWNER' && sharedDevice.deviceId === deviceId ||
+    sharedDevice.userId === device.user.userId)
     
-    if ((await sharingLevel).sharingLevel === 'OWNER' && (await device).deviceId === (await sharingLevel).deviceId) {
-      const result = await this.devicesRepository.delete({ deviceId, user });
+    if (sharedDevice.sharingLevel === 'OWNER' && sharedDevice.deviceId === device.deviceId ||
+        sharedDevice.sharingLevel === 'OWNER' && sharedDevice.userId === user.userId) {
+      const result = await this.devicesRepository.delete(sharedDevice.deviceId);
       if (result.affected === 0) {
         throw new NotFoundException(`Device with ID: ${deviceId} not found!`);
-      }
+      } 
     } else {
       throw new UnauthorizedException(
         'This device can only be deleted by its owner!',

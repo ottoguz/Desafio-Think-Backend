@@ -25,7 +25,7 @@ export class SharedDevicesRepository extends Repository<SharedDevice> {
     const foundDevice = await this.devicesRepository.findOneBy({ deviceId: deviceId })
     console.log(foundUser);
     console.log(foundDevice);
-    foundUser.devices.push(foundDevice)
+    foundUser.sharedDevices.push(foundDevice)
     await this.usersRepository.save(foundUser);
     
     const sharingLv = this.create({

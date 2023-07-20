@@ -15,6 +15,6 @@ export class SharedDevice {
   @Column()
   userId: string;
 
-  @Column()
+  @Column({default: 'OWNER'})
   sharingLevel: SharingLevelEnum;
 }
