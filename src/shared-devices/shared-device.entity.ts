@@ -7,20 +7,20 @@ import { Device } from "src/device/device.entity";
 @Entity()
 export class SharedDevice {
   @PrimaryGeneratedColumn()
-  public sharedDeviceId: string;
+  sharedDeviceId: string;
 
   @Column()
-  public deviceId: string;
+  deviceId: string;
 
   @Column()
-  public userId: string;
+  userId: string;
 
   @Column()
-  public sharingLevel: SharingLevelEnum;
+  sharingLevel: SharingLevelEnum;
 
-  //@ManyToOne(() => Device, (device) => device.sharedDevice)
-  //public device: Device;
+  @ManyToOne(() => User, (user: User) => user.sharedDevice)
+  user: User[];
 
-  //@ManyToOne(() => User, (user) => user.sharedDevice)
-  //public user: User;
+  @ManyToOne(() => Device, (device: Device) => device.sharedDevice)
+  device: Device[];
 }

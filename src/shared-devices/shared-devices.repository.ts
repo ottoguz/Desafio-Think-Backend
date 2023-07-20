@@ -5,6 +5,8 @@ import { Injectable } from "@nestjs/common";
 import { SharedDeviceDto } from "./dto/shared-device.dto";
 import { UsersRepository } from "src/auth/users.repository";
 import { DevicesRepository } from "src/device/devices.repository";
+import { User } from "src/auth/user.entity";
+import { DevicesService } from "src/device/devices.service";
 
 @Injectable()
 export class SharedDevicesRepository extends Repository<SharedDevice> {
@@ -12,20 +14,27 @@ export class SharedDevicesRepository extends Repository<SharedDevice> {
     private datasource: DataSource,
     private usersRepository: UsersRepository,
     private devicesRepository: DevicesRepository,
+    private devicesService: DevicesService
     ) {
     super(SharedDevice, datasource.createEntityManager());
   }
 
-  async shareDeviceToUser(sharedDeviceDto: SharedDeviceDto): Promise<void> {
+  async shareDeviceToUser(sharedDeviceDto: SharedDeviceDto, sharedDevice: SharedDevice): Promise<void> {
     const { userId, deviceId, sharingLevel } = sharedDeviceDto;
-    const foundUser = await this.usersRepository.findOneBy({ userId });
-    const foundDevice = await this.devicesRepository.createQueryBuilder('device').where('device.deviceId = :deviceId', { deviceId: deviceId}).getOne();
-    const sharedDeviceData = this.create({
-        userId,
-        deviceId, 
-        sharingLevel,
+    const foundUser = await this.usersRepository.findOneBy({ userId: userId });
+    const foundDevice = await this.devicesRepository.findOneBy({ deviceId: deviceId })
+    console.log(foundUser);
+    console.log(foundDevice);
+    foundUser.devices.push(foundDevice)
+    await this.usersRepository.save(foundUser);
+    //const sharedDevices = this.usersRepository.create(foundDevice)
+    //await this.save(sharedDevices)
+    const sharingLv = this.create({
+      userId: userId,
+      deviceId: deviceId,
+      sharingLevel: sharingLevel,
     })
-    await this.save(sharedDeviceData);
-    foundUser.devices.push(foundDevice);
+    await this.save(sharingLv);
+    console.log(foundUser)
   }
 }

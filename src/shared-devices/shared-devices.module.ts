@@ -8,9 +8,10 @@ import { AuthService } from 'src/auth/auth.service';
 import { DevicesService } from 'src/device/devices.service';
 import { JwtService } from '@nestjs/jwt';
 import { SharedDevicesRepository } from './shared-devices.repository';
+import { SharedDevice } from './shared-device.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UsersRepository])],
+  imports: [TypeOrmModule.forFeature([UsersRepository, SharedDevice])],
   controllers: [SharedDevicesController],
   providers: [
     SharedDevicesService,

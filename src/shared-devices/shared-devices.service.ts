@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { AuthService } from 'src/auth/auth.service';
 import { User } from 'src/auth/user.entity';
@@ -11,6 +12,7 @@ import { DeviceDto } from 'src/device/dto/device.dto';
 import { use } from 'passport';
 import { Console } from 'console';
 import { SharedDevicesRepository } from './shared-devices.repository';
+import { SharedDevice } from './shared-device.entity';
 
 @Injectable()
 export class SharedDevicesService {
@@ -23,8 +25,8 @@ export class SharedDevicesService {
     private sharedDevicesRepository: SharedDevicesRepository,
   ) {}
 
-  async shareDeviceToUser(sharedDeviceDto: SharedDeviceDto): Promise<void> {
-    return this.sharedDevicesRepository.shareDeviceToUser(sharedDeviceDto);
+  async shareDeviceToUser(sharedDeviceDto: SharedDeviceDto, sharedDevice: SharedDevice): Promise<void> {
+    return this.sharedDevicesRepository.shareDeviceToUser(sharedDeviceDto, sharedDevice);
   }
 
   /*
