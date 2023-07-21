@@ -61,15 +61,20 @@ export class SharedDevicesService {
   ): Promise<Device> {
     const foundDevice = await this.devicesRepository.findOneBy({deviceId: sharedDeviceId})
     const foundSharedDevice = await this.sharedDevicesRepository.findOneBy({deviceId : sharedDeviceId})
-    console.log(foundDevice.deviceId)
-    console.log(foundSharedDevice.deviceId)
-    console.log(foundSharedDevice.sharingLevel)
+    
     console.log(foundDevice.deviceId == foundSharedDevice.deviceId && foundSharedDevice.sharingLevel === 'OWNER' ||
     foundDevice.deviceId == foundDevice.deviceId && foundSharedDevice.sharingLevel === 'EDITOR')
 
     if (foundDevice.deviceId == foundSharedDevice.deviceId && foundSharedDevice.sharingLevel === 'OWNER' ||
         foundDevice.deviceId == foundDevice.deviceId && foundSharedDevice.sharingLevel === 'EDITOR') {
-          return this.devicesService.updateDevice(sharedDeviceId, type, local, name);
+
+          const sharedDeviceUpdate = await this.sharedDevicesRepository.findOneBy({ deviceId: sharedDeviceId })
+          sharedDeviceUpdate.type = type
+          sharedDeviceUpdate.local = local
+          sharedDeviceUpdate.name = name
+          await this.sharedDevicesRepository.save(sharedDeviceUpdate);
+          
+          return this.devicesService.updateDevice(sharedDeviceId, type, local, name); 
         } else {
           throw new UnauthorizedException(`Only owners or editors can update devices`)
       }
