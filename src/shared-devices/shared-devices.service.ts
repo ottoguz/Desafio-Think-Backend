@@ -1,6 +1,5 @@
 /* eslint-disable prettier/prettier */
 import { Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
-import { AuthService } from 'src/auth/auth.service';
 import { User } from 'src/auth/user.entity';
 import { Device } from 'src/device/device.entity';
 import { DevicesService } from 'src/device/devices.service';
@@ -8,9 +7,6 @@ import { SharedDeviceDto } from './dto/shared-device.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UsersRepository } from 'src/auth/users.repository';
 import { DevicesRepository } from 'src/device/devices.repository';
-import { DeviceDto } from 'src/device/dto/device.dto';
-import { use } from 'passport';
-import { Console } from 'console';
 import { SharedDevicesRepository } from './shared-devices.repository';
 import { SharedDevice } from './shared-device.entity';
 import { SharedDeviceFilterDto } from './dto/shared-device-filter.dto';
@@ -27,8 +23,8 @@ export class SharedDevicesService {
     private devicesService: DevicesService,
   ) {}
 
-  // Método: faz conexão com o repositório para buscar dispositivos
-  // em um array de dispositivos
+  // Método: faz conexão com o repositório para buscar todos 
+  // dispositivos compartilhados com o usuário
   getSharedDevices(
     sharedDeviceFilterDto: SharedDeviceFilterDto,
     user: User,
@@ -39,7 +35,7 @@ export class SharedDevicesService {
     );
   }
 
-  // Método: busca um dispositivo pelo "id"
+  // Método: busca um dispositivo compartilhado pelo "id"
   async getSharedDeviceById(sharedDeviceId: string): Promise<SharedDevice> {
     const foundDevice = await this.sharedDevicesRepository.findOneBy({
       sharedDeviceId,
@@ -51,8 +47,9 @@ export class SharedDevicesService {
     return foundDevice;
   }
 
-  //Método: atualiza no repositório as informações atualizadas
-  // de um dispositivo atrelado a um usuário
+  // Método: atualiza no repositório as informações 
+  // de um dispositivo compartilhado atrelado a um usuário
+  // somente dispositivos compartilhados como OWNER ou EDITOR podem ser atualizados
   async updateSharedDevice(
     sharedDeviceId: string,
     type: string,
@@ -77,15 +74,13 @@ export class SharedDevicesService {
       }
   }
 
-  // Faz uma busca de um dispositivo pelo "id" no repositório e deleta
+  // Método: Faz uma busca de um dispositivo compartilhado pelo "id" no repositório e deleta
+  // Apenas dispositivos compartilhados no nível de compartilhamento OWNER pode ser deletado
   async deleteSharedDevice(sharedDeviceId: string, _user: User): Promise<void> {
     try {
       const foundDevice = await this.devicesRepository.findOneBy({deviceId: sharedDeviceId})
       const foundSharedDevice = await this.sharedDevicesRepository.findOneBy({deviceId : sharedDeviceId})
-      console.log(foundDevice)
-      console.log(foundSharedDevice)
-      console.log(foundDevice.deviceId == foundSharedDevice.deviceId && foundSharedDevice.sharingLevel === 'OWNER')
-
+     
       if (foundDevice.deviceId == foundSharedDevice.deviceId && foundSharedDevice.sharingLevel === 'OWNER') {
         await this.devicesRepository.delete(sharedDeviceId);
         await this.sharedDevicesRepository.delete(sharedDeviceId);
@@ -94,11 +89,14 @@ export class SharedDevicesService {
       throw new InternalServerErrorException()
     }
   }
-
+  
+  // Método: camada de serviço que repassa os dados do dispositivo a ser
+  // compartilhado para o repositório de dispositivos compartilhados
   async shareDeviceToUser(sharedDeviceDto: SharedDeviceDto): Promise<void> {
     return this.sharedDevicesRepository.shareDeviceToUser(sharedDeviceDto);
   }
-
+  
+  // Método: desfaz o compartilhamento de um dispositivo
   async disassociateDeviceFromUser(
     sharedDeviceDto: SharedDeviceDto,
     user: User,

@@ -2,6 +2,7 @@
 import { IsOptional, IsString } from "class-validator";
 
 // Transferência de filtros para o motor de busca de dispositivos
+// compartilhados entre usuários
 export class SharedDeviceFilterDto {
 
   @IsString()

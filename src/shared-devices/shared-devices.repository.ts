@@ -7,9 +7,11 @@ import { UsersRepository } from "src/auth/users.repository";
 import { DevicesRepository } from "src/device/devices.repository";
 import { User } from "src/auth/user.entity";
 import { SharedDeviceFilterDto } from "./dto/shared-device-filter.dto";
+import { Logger } from '@nestjs/common';
 
 @Injectable()
 export class SharedDevicesRepository extends Repository<SharedDevice> {
+  private logger = new Logger('SharedDevicesRepository');
   constructor(
     private datasource: DataSource,
     private usersRepository: UsersRepository,
@@ -39,27 +41,31 @@ export class SharedDevicesRepository extends Repository<SharedDevice> {
 
     // Tentará recuperar dispositivos compartilhados entre usuários do banco de dados
     // Se houver algum erro será retornado como log no terminal (c/ stacktrace)
+    // OBS: Loggers utilizados como test para fins de estudo
     try {
       const sharedDevices = await query.getMany();
       return sharedDevices;
     } catch (error) {
-      /*
       this.logger.error(
         `Failed to get tasks for user "${
-          user.email}" .Filters: ${JSON.stringify(deviceFilterDto)}`,
+          user.email}" .Filters: ${JSON.stringify(sharedDeviceFilterDto)}`,
           error.stack,
-        );*/
+        );
         throw new InternalServerErrorException();
     }
   }
-
+  
+  //Método: camada de serviço para compartilhamento de dispositivos entre usuários
   async shareDeviceToUser(sharedDeviceDto: SharedDeviceDto): Promise<void> {
-    const { userId, deviceId, sharingLevel, type, local, name } = sharedDeviceDto;
+    // Atualiza no banco de dados quais dispositivos estão compartilhados
+    const { userId, deviceId, sharingLevel } = sharedDeviceDto;
     const foundUser = await this.usersRepository.findOneBy({ userId: userId });
     const foundDevice = await this.devicesRepository.findOneBy({ deviceId: deviceId })
     foundUser.sharedDevices.push(foundDevice)
     await this.usersRepository.save(foundUser);
     
+    // Atualiza a tabela shared_device com informações relativas
+    // a dispositivos compartilhados
     const sharingLv = this.create({
       userId: userId,
       deviceId: deviceId,

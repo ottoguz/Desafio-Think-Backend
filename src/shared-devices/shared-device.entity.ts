@@ -1,9 +1,9 @@
 /* eslint-disable prettier/prettier */
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm"
 import { SharingLevelEnum } from "./sharing-level.enum";
-import { User } from "src/auth/user.entity";
-import { Device } from "src/device/device.entity";
 
+// Entidade intermediária que relaciona dispositivos e usuários
+// faz o intermédio para a relação(many to many)
 @Entity()
 export class SharedDevice {
   @PrimaryGeneratedColumn()

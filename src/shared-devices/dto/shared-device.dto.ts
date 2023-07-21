@@ -3,6 +3,8 @@ import { IsEnum, IsString } from "class-validator";
 import { SharingLevelEnum } from "../sharing-level.enum";
 import { SharedDevice } from "../shared-device.entity";
 
+// Dto para transferência de dados para recursos
+// de dispositvos compartilhados
 export class SharedDeviceDto {
     @IsString()
     type: string;

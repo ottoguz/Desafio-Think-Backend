@@ -14,6 +14,7 @@ import { Device } from 'src/device/device.entity';
 @Controller('shared-devices')
 @UseGuards(AuthGuard())
 export class SharedDevicesController {
+  private logger = new Logger('SharedDevicesController');
   constructor(private sharedDevicesService: SharedDevicesService) {}
 
   // Método: Recupera todos dispositivos compartilhados entre usuários
@@ -22,16 +23,16 @@ export class SharedDevicesController {
     @Query() sharedDeviceFilterDto: SharedDeviceFilterDto,
     @GetUser() user: User,
   ): Promise<SharedDevice[]> {
-    /*
+    
     this.logger.verbose(
-      `User: "${user.email}" retrieving all devices .Filters: ${JSON.stringify(
-        sharedDeviceDto,
+      `User: "${user.email}" retrieving all shared devices .Filters: ${JSON.stringify(
+        sharedDeviceFilterDto,
       )}`,
-    );*/
+    );
     return this.sharedDevicesService.getSharedDevices(sharedDeviceFilterDto, user);
   }
 
-  // Método: busca um dispositivo pelo campo "id"
+  // Método: busca um dispositivo compartilhado pelo campo "id"
   @Get('/:sharedDeviceId')
   getSharedDeviceById(@Param('sharedDeviceId') sharedDeviceId: string): Promise<SharedDevice> {
     return this.sharedDevicesService.getSharedDeviceById(sharedDeviceId);
@@ -48,7 +49,7 @@ export class SharedDevicesController {
     return this.sharedDevicesService.updateSharedDevice(sharedDeviceId, type, local, name);
   }
 
-  // Método: rota para deletar um dispositivo do sistema identificando pelo "id"
+  // Método: rota para deletar um dispositivo compartilhado
   @Delete('/:sharedDeviceId')
   deleteDevice(
     @Param('sharedDeviceId') sharedDeviceId: string,
@@ -56,13 +57,18 @@ export class SharedDevicesController {
   ): Promise<void> {
     return this.sharedDevicesService.deleteSharedDevice(sharedDeviceId, user);
   }
-
+  
+  // Método: Rota para o compartilhamento de dispositivos entre usuários
+  // pegando todas as suas informações(tipo, local, nome, etc...)
   @Post('/share-device')
   async shareDeviceToUser(
     @Body() sharedDeviceDto: SharedDeviceDto): Promise<void> {
      return await this.sharedDevicesService.shareDeviceToUser(sharedDeviceDto);
   }
   
+  // Método: Rota para disassociar um dispositivo compartilihado de um usuário
+  // É um metodo post porque não DELETA um dispositivo apenas remove o acesso
+  // para a pessoa com quem compartilhou 
   @Post('/disassociate-device')
   async disassociateDeviceFromUser(
     @Body() sharedDeviceDto: SharedDeviceDto,
