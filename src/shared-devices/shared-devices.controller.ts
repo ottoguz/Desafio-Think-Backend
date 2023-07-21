@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Controller, Post, Body, UseGuards, Get, Query, Param, Patch } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Get, Query, Param, Patch, Delete } from '@nestjs/common';
 import { SharedDevicesService } from './shared-devices.service';
 import { SharedDeviceDto } from './dto/shared-device.dto';
 import { AuthGuard } from '@nestjs/passport';
@@ -46,6 +46,15 @@ export class SharedDevicesController {
   ): Promise<Device> {
     const { type, local, name } = sharedDeviceDto;
     return this.sharedDevicesService.updateSharedDevice(sharedDeviceId, type, local, name);
+  }
+
+  // Método: rota para deletar um dispositivo do sistema identificando pelo "id"
+  @Delete('/:sharedDeviceId')
+  deleteDevice(
+    @Param('sharedDeviceId') sharedDeviceId: string,
+    @GetUser() user: User,
+  ): Promise<void> {
+    return this.sharedDevicesService.deleteSharedDevice(sharedDeviceId, user);
   }
 
   @Post('/share-device')

@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from 'src/auth/auth.service';
 import { User } from 'src/auth/user.entity';
 import { Device } from 'src/device/device.entity';
@@ -61,9 +61,6 @@ export class SharedDevicesService {
   ): Promise<Device> {
     const foundDevice = await this.devicesRepository.findOneBy({deviceId: sharedDeviceId})
     const foundSharedDevice = await this.sharedDevicesRepository.findOneBy({deviceId : sharedDeviceId})
-    
-    console.log(foundDevice.deviceId == foundSharedDevice.deviceId && foundSharedDevice.sharingLevel === 'OWNER' ||
-    foundDevice.deviceId == foundDevice.deviceId && foundSharedDevice.sharingLevel === 'EDITOR')
 
     if (foundDevice.deviceId == foundSharedDevice.deviceId && foundSharedDevice.sharingLevel === 'OWNER' ||
         foundDevice.deviceId == foundDevice.deviceId && foundSharedDevice.sharingLevel === 'EDITOR') {
@@ -73,18 +70,35 @@ export class SharedDevicesService {
           sharedDeviceUpdate.local = local
           sharedDeviceUpdate.name = name
           await this.sharedDevicesRepository.save(sharedDeviceUpdate);
-          
+
           return this.devicesService.updateDevice(sharedDeviceId, type, local, name); 
         } else {
           throw new UnauthorizedException(`Only owners or editors can update devices`)
       }
   }
 
+  // Faz uma busca de um dispositivo pelo "id" no repositório e deleta
+  async deleteSharedDevice(sharedDeviceId: string, _user: User): Promise<void> {
+    try {
+      const foundDevice = await this.devicesRepository.findOneBy({deviceId: sharedDeviceId})
+      const foundSharedDevice = await this.sharedDevicesRepository.findOneBy({deviceId : sharedDeviceId})
+      console.log(foundDevice)
+      console.log(foundSharedDevice)
+      console.log(foundDevice.deviceId == foundSharedDevice.deviceId && foundSharedDevice.sharingLevel === 'OWNER')
+
+      if (foundDevice.deviceId == foundSharedDevice.deviceId && foundSharedDevice.sharingLevel === 'OWNER') {
+        await this.devicesRepository.delete(sharedDeviceId);
+        await this.sharedDevicesRepository.delete(sharedDeviceId);
+      }
+    } catch (error) {
+      throw new InternalServerErrorException()
+    }
+  }
+
   async shareDeviceToUser(sharedDeviceDto: SharedDeviceDto): Promise<void> {
     return this.sharedDevicesRepository.shareDeviceToUser(sharedDeviceDto);
   }
 
-  
   async disassociateDeviceFromUser(
     sharedDeviceDto: SharedDeviceDto,
     user: User,
