@@ -15,6 +15,18 @@ export class SharedDevice {
   @Column()
   userId: string;
 
+  // Col: tipo de dispositivo
+  @Column()
+  type: string;
+  
+  // Col: Local do dispositivo
+  @Column()
+  local: string;
+  
+  // Col:Nome do dispositivo
+  @Column()
+  name: string;
+
   @Column({default: 'OWNER'})
   sharingLevel: SharingLevelEnum;
 }

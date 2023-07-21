@@ -54,7 +54,7 @@ export class SharedDevicesRepository extends Repository<SharedDevice> {
   }
 
   async shareDeviceToUser(sharedDeviceDto: SharedDeviceDto): Promise<void> {
-    const { userId, deviceId, sharingLevel } = sharedDeviceDto;
+    const { userId, deviceId, sharingLevel, type, local, name } = sharedDeviceDto;
     const foundUser = await this.usersRepository.findOneBy({ userId: userId });
     const foundDevice = await this.devicesRepository.findOneBy({ deviceId: deviceId })
     foundUser.sharedDevices.push(foundDevice)
@@ -64,6 +64,9 @@ export class SharedDevicesRepository extends Repository<SharedDevice> {
       userId: userId,
       deviceId: deviceId,
       sharingLevel: sharingLevel,
+      type: foundDevice.type,
+      local: foundDevice.local,
+      name: foundDevice.name,
     })
     await this.save(sharingLv);
   }

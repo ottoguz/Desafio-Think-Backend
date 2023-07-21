@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Controller, Post, Body, UseGuards, Get, Query, Param } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Get, Query, Param, Patch } from '@nestjs/common';
 import { SharedDevicesService } from './shared-devices.service';
 import { SharedDeviceDto } from './dto/shared-device.dto';
 import { AuthGuard } from '@nestjs/passport';
@@ -8,6 +8,7 @@ import { User } from 'src/auth/user.entity';
 import { Logger } from '@nestjs/common';
 import { SharedDevice } from './shared-device.entity';
 import { SharedDeviceFilterDto } from './dto/shared-device-filter.dto';
+import { Device } from 'src/device/device.entity';
 
 
 @Controller('shared-devices')
@@ -34,6 +35,17 @@ export class SharedDevicesController {
   @Get('/:sharedDeviceId')
   getSharedDeviceById(@Param('sharedDeviceId') sharedDeviceId: string): Promise<SharedDevice> {
     return this.sharedDevicesService.getSharedDeviceById(sharedDeviceId);
+  }
+
+  // Método: rota para atualizar informações de um dispositivo
+  // compartilhado entre usuários
+  @Patch('/:sharedDeviceId/update-shared-device')
+  updateSharedDevice(
+    @Param('sharedDeviceId') sharedDeviceId: string,
+    @Body() sharedDeviceDto: SharedDeviceDto,
+  ): Promise<Device> {
+    const { type, local, name } = sharedDeviceDto;
+    return this.sharedDevicesService.updateSharedDevice(sharedDeviceId, type, local, name);
   }
 
   @Post('/share-device')
