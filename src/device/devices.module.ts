@@ -7,14 +7,9 @@ import { AuthModule } from 'src/auth/auth.module';
 import { SharedDevicesModule } from 'src/shared-devices/shared-devices.module';
 import { SharedDevicesRepository } from 'src/shared-devices/shared-devices.repository';
 import { UsersRepository } from 'src/auth/users.repository';
-import { SharedDevicesService } from 'src/shared-devices/shared-devices.service';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([DevicesRepository]),
-    AuthModule,
-    SharedDevicesModule,
-  ],
+  imports: [TypeOrmModule.forFeature([DevicesRepository]), AuthModule],
   providers: [
     DevicesService,
     DevicesRepository,

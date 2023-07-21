@@ -1,12 +1,12 @@
 /* eslint-disable prettier/prettier */
 import { DataSource, Repository } from "typeorm";
 import { SharedDevice } from "./shared-device.entity";
-import { Injectable } from "@nestjs/common";
+import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { SharedDeviceDto } from "./dto/shared-device.dto";
 import { UsersRepository } from "src/auth/users.repository";
 import { DevicesRepository } from "src/device/devices.repository";
 import { User } from "src/auth/user.entity";
-import { DevicesService } from "src/device/devices.service";
+import { SharedDeviceFilterDto } from "./dto/shared-device-filter.dto";
 
 @Injectable()
 export class SharedDevicesRepository extends Repository<SharedDevice> {
@@ -19,12 +19,44 @@ export class SharedDevicesRepository extends Repository<SharedDevice> {
     super(SharedDevice, datasource.createEntityManager());
   }
 
+  // Método: Consulta um dispositivo de BD
+  async getSharedDevices(sharedDeviceFilterDto: SharedDeviceFilterDto, user: User): Promise<SharedDevice[]> {
+    const { name, search } = sharedDeviceFilterDto; 
+    const { userId } = user
+    const query = this.createQueryBuilder('sharedDevice');
+    query.where({ userId });
+    
+    if(name) {
+      query.andWhere('sharedDevice.name = :name', { name }) ;
+    }
+    
+    if (search) {
+      query.andWhere(
+        '(LOWER(sharedDevice.name) LIKE LOWER(:search) OR LOWER(sharedDevicee.type) LIKE LOWER(:search))',
+        { search: `%${search}%` },
+      );
+    }
+
+    // Tentará recuperar dispositivos do banco de dados
+    // Se houver algum erro será retornado como log no terminal (c/ stacktrace)
+    try {
+      const sharedDevices = await query.getMany();
+      return sharedDevices;
+    } catch (error) {
+      /*
+      this.logger.error(
+        `Failed to get tasks for user "${
+          user.email}" .Filters: ${JSON.stringify(deviceFilterDto)}`,
+          error.stack,
+        );*/
+        throw new InternalServerErrorException();
+    }
+  }
+
   async shareDeviceToUser(sharedDeviceDto: SharedDeviceDto): Promise<void> {
     const { userId, deviceId, sharingLevel } = sharedDeviceDto;
     const foundUser = await this.usersRepository.findOneBy({ userId: userId });
     const foundDevice = await this.devicesRepository.findOneBy({ deviceId: deviceId })
-    console.log(foundUser);
-    console.log(foundDevice);
     foundUser.sharedDevices.push(foundDevice)
     await this.usersRepository.save(foundUser);
     
@@ -34,6 +66,5 @@ export class SharedDevicesRepository extends Repository<SharedDevice> {
       sharingLevel: sharingLevel,
     })
     await this.save(sharingLv);
-    console.log(foundUser)
   }
 }
