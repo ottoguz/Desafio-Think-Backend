@@ -19,7 +19,7 @@ export class SharedDevicesRepository extends Repository<SharedDevice> {
     super(SharedDevice, datasource.createEntityManager());
   }
 
-  // Método: Consulta um dispositivo de BD
+  // Método: Consulta um dispositivo compartilhado entre usuários no banco de dados
   async getSharedDevices(sharedDeviceFilterDto: SharedDeviceFilterDto, user: User): Promise<SharedDevice[]> {
     const { name, search } = sharedDeviceFilterDto; 
     const { userId } = user
@@ -37,7 +37,7 @@ export class SharedDevicesRepository extends Repository<SharedDevice> {
       );
     }
 
-    // Tentará recuperar dispositivos do banco de dados
+    // Tentará recuperar dispositivos compartilhados entre usuários do banco de dados
     // Se houver algum erro será retornado como log no terminal (c/ stacktrace)
     try {
       const sharedDevices = await query.getMany();

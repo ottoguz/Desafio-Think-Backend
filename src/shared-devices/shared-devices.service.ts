@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { AuthService } from 'src/auth/auth.service';
 import { User } from 'src/auth/user.entity';
 import { Device } from 'src/device/device.entity';
@@ -30,6 +30,16 @@ export class SharedDevicesService {
   // em um array de dispositivos
   getSharedDevices(sharedDeviceFilterDto: SharedDeviceFilterDto, user: User): Promise<SharedDevice[]> {
     return this.sharedDevicesRepository.getSharedDevices(sharedDeviceFilterDto, user);
+  }
+
+  // Método: busca um dispositivo pelo "id"
+  async getSharedDeviceById(sharedDeviceId: string): Promise<SharedDevice> {
+    const foundDevice = await this.sharedDevicesRepository.findOneBy({ sharedDeviceId });
+
+    if (!foundDevice) {
+      throw new NotFoundException();
+    }
+    return foundDevice;
   }
 
   async shareDeviceToUser(sharedDeviceDto: SharedDeviceDto): Promise<void> {

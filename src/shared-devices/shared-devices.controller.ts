@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Controller, Post, Body, UseGuards, Get, Query } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Get, Query, Param } from '@nestjs/common';
 import { SharedDevicesService } from './shared-devices.service';
 import { SharedDeviceDto } from './dto/shared-device.dto';
 import { AuthGuard } from '@nestjs/passport';
@@ -15,7 +15,7 @@ import { SharedDeviceFilterDto } from './dto/shared-device-filter.dto';
 export class SharedDevicesController {
   constructor(private sharedDevicesService: SharedDevicesService) {}
 
-  // Método: Recupera todos dispositivos pertencentes a um usuário
+  // Método: Recupera todos dispositivos compartilhados entre usuários
   @Get()
   getSharedDevices(
     @Query() sharedDeviceFilterDto: SharedDeviceFilterDto,
@@ -29,6 +29,13 @@ export class SharedDevicesController {
     );*/
     return this.sharedDevicesService.getSharedDevices(sharedDeviceFilterDto, user);
   }
+
+  // Método: busca um dispositivo pelo campo "id"
+  @Get('/:sharedDeviceId')
+  getSharedDeviceById(@Param('sharedDeviceId') sharedDeviceId: string): Promise<SharedDevice> {
+    return this.sharedDevicesService.getSharedDeviceById(sharedDeviceId);
+  }
+
   @Post('/share-device')
   async shareDeviceToUser(
     @Body() sharedDeviceDto: SharedDeviceDto): Promise<void> {
