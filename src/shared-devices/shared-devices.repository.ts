@@ -61,7 +61,18 @@ export class SharedDevicesRepository extends Repository<SharedDevice> {
     const { userId, deviceId, sharingLevel } = sharedDeviceDto;
     const foundUser = await this.usersRepository.findOneBy({ userId: userId });
     const foundDevice = await this.devicesRepository.findOneBy({ deviceId: deviceId })
-    foundUser.sharedDevices.push(foundDevice)
+
+    const { type, local, name } = foundDevice;
+    const sharedDevice = this.devicesRepository.create({
+      deviceId: deviceId,
+      type: type,
+      local: local,
+      name: name,
+      user: foundUser,
+    });
+    await this.devicesRepository.save(sharedDevice);
+
+    foundUser.sharedDevices.push(sharedDevice);
     await this.usersRepository.save(foundUser);
     
     // Atualiza a tabela shared_device com informações relativas
