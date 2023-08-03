@@ -2,7 +2,6 @@
 import {
   Injectable,
   NotFoundException,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DevicesRepository } from './devices.repository';
@@ -10,7 +9,7 @@ import { Device } from './device.entity';
 import { DeviceDto } from './dto/device.dto';
 import { User } from 'src/auth/user.entity';
 import { SharedDevicesRepository } from 'src/shared-devices/shared-devices.repository';
-import { any } from '@hapi/joi';
+
 
 @Injectable()
 export class DevicesService {

@@ -61,3 +61,5 @@ export class DevicesRepository extends Repository<Device> {
     return device;
   }
 }
+
+

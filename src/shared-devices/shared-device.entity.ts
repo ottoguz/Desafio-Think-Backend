@@ -1,12 +1,14 @@
 /* eslint-disable prettier/prettier */
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm"
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
 import { SharingLevelEnum } from "./sharing-level.enum";
+import { Exclude } from "class-transformer";
+import { User } from "src/auth/user.entity";
 
 // Entidade intermediária que relaciona dispositivos e usuários
 // faz o intermédio para a relação(many to many)
 @Entity()
 export class SharedDevice {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   sharedDeviceId: string;
 
   @Column()
@@ -29,4 +31,9 @@ export class SharedDevice {
 
   @Column({default: 'OWNER'})
   sharingLevel: SharingLevelEnum;
+
+  // Relação de many to one para (Um usuário para vários dispositivos)
+  @ManyToOne((_type) => User, (user) => user.sharedDevices, { eager: false })
+  @Exclude({ toPlainOnly: true })
+  user: User;
 }

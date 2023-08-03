@@ -1,8 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Exclude } from 'class-transformer';
 import { User } from 'src/auth/user.entity';
-import { SharingLevelEnum } from 'src/shared-devices/sharing-level.enum';
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 
 @Entity()

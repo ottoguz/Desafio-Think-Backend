@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { IsEnum, IsString } from "class-validator";
+import { IsEnum, IsNumber, IsString } from "class-validator";
 import { SharingLevelEnum } from "../sharing-level.enum";
 import { SharedDevice } from "../shared-device.entity";
 
@@ -20,6 +20,9 @@ export class SharedDeviceDto {
 
     @IsString()
     deviceId: string;
+
+    @IsNumber()
+    sharedDeviceId: string;
     
     @IsEnum(SharedDevice)
     sharingLevel: SharingLevelEnum;

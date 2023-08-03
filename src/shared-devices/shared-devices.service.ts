@@ -78,32 +78,21 @@ export class SharedDevicesService {
   // Apenas dispositivos compartilhados no nível de compartilhamento OWNER pode ser deletado
   async deleteSharedDevice(sharedDeviceId: string, _user: User): Promise<void> {
     try {
-      const foundDevice = await this.devicesRepository.findOneBy({deviceId: sharedDeviceId})
-      const foundSharedDevice = await this.sharedDevicesRepository.findOneBy({deviceId : sharedDeviceId})
+      //const foundDevice = await this.devicesRepository.findOneBy({deviceId: sharedDeviceId})
+      const foundSharedDevice = await this.sharedDevicesRepository.findOneBy({ sharedDeviceId : sharedDeviceId })
      
-      if (foundDevice.deviceId == foundSharedDevice.deviceId && foundSharedDevice.sharingLevel === 'OWNER') {
-        await this.devicesRepository.delete(sharedDeviceId);
+      if (sharedDeviceId == foundSharedDevice.sharedDeviceId && foundSharedDevice.sharingLevel === 'OWNER') {
+        //await this.devicesRepository.delete(sharedDeviceId);
         await this.sharedDevicesRepository.delete(sharedDeviceId);
-      }
+      } 
     } catch (error) {
       throw new InternalServerErrorException()
-    }
+    } 
   }
   
   // Método: camada de serviço que repassa os dados do dispositivo a ser
   // compartilhado para o repositório de dispositivos compartilhados
   async shareDeviceToUser(sharedDeviceDto: SharedDeviceDto): Promise<void> {
     return this.sharedDevicesRepository.shareDeviceToUser(sharedDeviceDto);
-  }
-  
-  // Método: desfaz o compartilhamento de um dispositivo
-  async disassociateDeviceFromUser(
-    sharedDeviceDto: SharedDeviceDto,
-    user: User,
-  ): Promise<void> {
-    const { deviceId } = sharedDeviceDto
-    const foundDevice = await this.devicesRepository.findOneBy({ deviceId });
-    user.devices.push(foundDevice);
-    await this.usersRepository.save(user);
   }
 }

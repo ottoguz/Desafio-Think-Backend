@@ -24,7 +24,9 @@ export class AuthCredentialsDto {
   @IsString()
   @MinLength(8)
   @MaxLength(32)
-  @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, 
-    { message: 'Weak password! Must contain Upper and Lower Case, Number and Special Character'})
+  @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, { 
+      message: 'Weak password! Must contain Upper and Lower Case, Number and Special Character'
+    }
+  )
   password: string;
 }
