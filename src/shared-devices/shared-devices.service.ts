@@ -56,19 +56,18 @@ export class SharedDevicesService {
     local: string,
     name: string,
   ): Promise<Device> {
-    const foundDevice = await this.devicesRepository.findOneBy({deviceId: sharedDeviceId})
-    const foundSharedDevice = await this.sharedDevicesRepository.findOneBy({deviceId : sharedDeviceId})
+    //const foundDevice = await this.devicesRepository.findOneBy({deviceId: sharedDeviceId})
+    const foundSharedDevice = await this.sharedDevicesRepository.findOneBy({ sharedDeviceId : sharedDeviceId })
 
-    if (foundDevice.deviceId == foundSharedDevice.deviceId && foundSharedDevice.sharingLevel === 'OWNER' ||
-        foundDevice.deviceId == foundDevice.deviceId && foundSharedDevice.sharingLevel === 'EDITOR') {
+    if (foundSharedDevice.sharedDeviceId == sharedDeviceId && foundSharedDevice.sharingLevel === 'OWNER' ||
+        foundSharedDevice.sharedDeviceId == sharedDeviceId && foundSharedDevice.sharingLevel === 'EDITOR') {
 
-          const sharedDeviceUpdate = await this.sharedDevicesRepository.findOneBy({ deviceId: sharedDeviceId })
+          const sharedDeviceUpdate = await this.sharedDevicesRepository.findOneBy({ sharedDeviceId: sharedDeviceId })
           sharedDeviceUpdate.type = type
           sharedDeviceUpdate.local = local
           sharedDeviceUpdate.name = name
           await this.sharedDevicesRepository.save(sharedDeviceUpdate);
-
-          return this.devicesService.updateDevice(sharedDeviceId, type, local, name); 
+          return sharedDeviceUpdate; 
         } else {
           throw new UnauthorizedException(`Only owners or editors can update devices`)
       }
