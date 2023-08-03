@@ -70,6 +70,7 @@ export class SharedDevicesRepository extends Repository<SharedDevice> {
       local: local,
       name: name,
       user: foundUser,
+      sharingLevel,
     });
     await this.save(sharedDevice);
 

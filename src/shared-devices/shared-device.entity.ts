@@ -29,7 +29,7 @@ export class SharedDevice {
   @Column()
   name: string;
 
-  @Column({default: 'OWNER'})
+  @Column()
   sharingLevel: SharingLevelEnum;
 
   // Relação de many to one para (Um usuário para vários dispositivos)

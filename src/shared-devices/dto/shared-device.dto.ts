@@ -24,6 +24,6 @@ export class SharedDeviceDto {
     @IsNumber()
     sharedDeviceId: string;
     
-    @IsEnum(SharedDevice)
+    //@IsEnum()
     sharingLevel: SharingLevelEnum;
 }
